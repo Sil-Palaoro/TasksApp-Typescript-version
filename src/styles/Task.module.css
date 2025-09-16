@@ -1,0 +1,82 @@
+/*Contenedor de cada tarea*/
+.div {
+  display: fixed;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  position: relative;
+}
+
+/*Tarea*/
+.task {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 25px;
+}
+
+/*Tarea completada*/
+.completed {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: line-through;
+  color: #888;
+  padding-left: 25px;
+}
+
+/*Boton Editar*/
+.AiFillEdit {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  right: 30px;
+  top: 35px;
+  transform: translateY(-50%);
+}
+
+/*Boton Borrar*/
+.BsFillTrash2Fill {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  right: 8px;
+  top: 35px;
+  transform: translateY(-50%);
+}
+
+/*Radio button vacio para marcar la tarea como completada*/
+.RiRadioButtonFill {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  left: 8px;
+  top: 35px;
+  transform: translateY(-50%);
+}
+
+/*Radio button relleno, indicando que la tarea ya fue completada*/
+.RiRadioButtonFillCompleted {
+  cursor: pointer;
+  position: absolute;
+  color: #888;
+  display: flex;
+  left: 8px;
+  top: 35px;
+  transform: translateY(-50%);
+}
+
+/*Botones de Editar, Eliminar y Radio button para completar al pasar el cursor por encima*/
+.AiFillEdit:hover,
+.BsFillTrash2Fill:hover,
+.RiRadioButtonFill:hover {
+  font-size: 20px;
+  color: #888;
+  display: flex;
+}

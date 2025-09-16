@@ -1,0 +1,35 @@
+/*Contenedor del formulario de tareas*/
+.taskForm {
+    display: flex;
+    position: relative;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    
+  }
+   
+  /*Inputs del formulario de tareas*/
+  .taskInput {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    border-width: 2px solid rgba(46, 1, 119, 0.59);
+ 
+  }
+
+  /*Boton "Agregar"*/
+  .taskBtn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
+  /*Boton "Agregar" al pasar el cursor por encima*/
+  .taskBtn:hover {
+    background-color: #7cb4f0;
+  }
+  

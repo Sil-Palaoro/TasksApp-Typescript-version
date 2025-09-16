@@ -1,0 +1,109 @@
+/*Contenedor de la Lista de Tareas (incluyendo el formulario para agregar y la barra de busqueda)*/
+.container {
+  position: flex;
+  justify-content: center;
+  align-items: center;
+  top: 25%;
+  left: 50%;
+  background-color: #b28be9;
+  padding: 16px;
+  border-radius: 8px;
+  border-width: 2px solid rgba(249, 246, 231, 0.59);
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(234, 234, 213, 0.816);
+  min-width: 400px;
+  min-height: 300px;
+}
+
+/*Input de la barra de busqueda*/
+.taskInput {
+  flex: 1;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/*Boton de la barra de busqueda*/
+.taskBtn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+/*Contenedor externo de cada tarea*/
+.descripcionbox {
+  width: 500px;
+  white-space: normal;
+  overflow: hidden;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.descripcionbox p {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/*Contenedor de las tareas*/
+.div {
+  display: fixed;
+  background-color: #f5f5f5;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  position: relative;
+ }
+
+ /*Cuadro de textos tarea de ejemplo*/
+.task {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 25px;
+}
+
+/*Radio button vacio para marcar la tarea como completada*/
+.RiRadioButtonFill {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  left: 8px;
+  top: 35px;
+  transform: translateY(-50%);
+}
+
+/*Botones de Editar, Eliminar y Radio button para completar al pasar el cursor por encima*/
+.AiFillEdit:hover,
+.BsFillTrash2Fill:hover,
+.RiRadioButtonFill:hover {
+  font-size: 20px;
+  color: #888;
+  display: flex;
+}
+
+/*Boton Editar*/
+.AiFillEdit {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  right: 30px;
+  top: 35px;
+  transform: translateY(-50%);
+}
+
+/*Boton Borrar*/
+.BsFillTrash2Fill {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  right: 8px;
+  top: 35px;
+  transform: translateY(-50%);
+}

@@ -1,0 +1,25 @@
+/*Contenedor de la Lista de Tareas*/
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+/*Titulo en la página de tareas*/
+.titulotareas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding-top: 60px;
+}
+
+/*Fondo de la pagina de tareas*/
+.fondo {
+  background: linear-gradient(to right, #d2a6d8, #d4c6f9, #fdcebb, #ffffff);
+}
+
