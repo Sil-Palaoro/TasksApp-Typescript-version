@@ -5,8 +5,9 @@ import BarraNavAppTareas from "@/app/components/BarraNavAppTareas";
 import Footer from "@/app/components/Footer";
 import Head from "next/head";
 
+type Metadata = Record<string, string>;
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "SGP Tareas",
   description: "Tu organizador personal",
 };

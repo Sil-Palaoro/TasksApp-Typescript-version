@@ -11,7 +11,7 @@ function Inicio_sesion() {
   const [password, setPassword] = useState("");
   
   // Endpoint para obtener el token JWT
-  const apiUrl = '/api/login'; 
+  const apiUrl: string = '/api/login'; 
 
   const handleIniciarSesion = async () => {
     try {

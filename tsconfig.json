@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "module": "nodenext",
+        "outDir": "dist", 
+        "target": "ESNext",
+        "strict": true,
+        "noUnusedParameters": true,
+        "noImplicitAny": true,
+        "moduleResolution": "nodenext",
+        "esModuleInterop": true,
+    },
+    "include": ["src/**/*.ts", "src/app/layout.tsx"]
+}
