@@ -15,19 +15,19 @@ function BarraNavAppTareas () {
     setIsClient(true)
   }, [])
 
-  function PathNameNotHome() {
+  function PathNameNotHome(): boolean {
     return pathname !== '/'
   }
 
-  function PathNameNotIniciarSesion() {
+  function PathNameNotIniciarSesion(): boolean {
     return pathname !== '/iniciar_sesion'
   }
 
-  function PathNameNotTareas() {
+  function PathNameNotTareas(): boolean {
     return pathname !== '/tareas'
   }
 
-  function PathNameNotRegistro() {
+  function PathNameNotRegistro(): boolean {
     return pathname !== '/registro'
   }
  
