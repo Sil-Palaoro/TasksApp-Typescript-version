@@ -1,6 +1,6 @@
 /*Layout de la App con metadata, head (favicon, fuentes), y ubicación de los componentes de la 
 Barra de Navegación y Footer */
-
+import { ReactNode } from "react";
 import BarraNavAppTareas from "@/app/components/BarraNavAppTareas";
 import Footer from "@/app/components/Footer";
 import Head from "next/head";
