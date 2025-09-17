@@ -17,33 +17,44 @@ function TaskList() {
   const [filter, setFilter] = useState("all"); // Estado para el filtro seleccionado
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
   const router = useRouter();
+
   
-  useEffect(() => {
-    // Recupera el token JWT almacenado en localStorage
-    const access_token = localStorage.getItem('access_token');
-    
-    
-    // Verifica si el token está presente
-    if (access_token) {
-      // Configura una instancia de Axios con el token en la cabecera
-      const axiosInstance = axios.create({
-        baseURL: "/api/",
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-          'Content-Type': 'application/json',
-        },
-      
-      });
-      
-      //Trae las tareas desde la BD
+  const getAccessToken = (): string | null => localStorage.getItem('access_token');
+  
+  function createAxiosInstance(token: string) {    
+    const axiosInstance = axios.create({
+          baseURL: "/api/",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          });
+
+      return axiosInstance;
+  };
+
+
+  const getTasks = async (axiosInstance: axios.AxiosInstance) => {
+    try {    
       axiosInstance
         .get("/tasks/")
         .then((response) => setTasks(response.data))
-        .catch((error) => console.error(error));       
+        // .catch((error) => console.error(error));     
+    } catch {((error: Error) => console.error(error))};   
+  };
 
+  const redirectToLogin = () => router.push('/iniciar_sesion'); 
+
+  
+  useEffect(() => {
+    const accessToken = getAccessToken();
+
+
+    if (accessToken) {
+      const axiosInstance = createAxiosInstance(accessToken);
+      getTasks(axiosInstance);
     } else {
-      //Si el token JWT no está presente en localStorage, redirige a la página de inicio de sesión
-      router.push('/iniciar_sesion'); 
+      redirectToLogin();
     }
   }, []);  
   
@@ -63,7 +74,7 @@ function TaskList() {
   };
 
   //Función para marcar una tarea como completada o no
-  const taskCompleted = (id) => {
+  const taskCompleted = (id: string) => {
     const access_token = localStorage.getItem('access_token');
     if (access_token) {
         const axiosInstance = axios.create({
@@ -178,3 +189,35 @@ function TaskList() {
 }
 
 export default TaskList;
+
+
+
+// --- IGNORE ---
+//UseEffect original
+
+
+    // Recupera el token JWT almacenado en localStorage
+    // const access_token = localStorage.getItem('access_token');    
+    
+    // Verifica si el token está presente
+    // if (access_token) {
+      // // Configura una instancia de Axios con el token en la cabecera
+      // const axiosInstance = axios.create({
+      //   baseURL: "/api/",
+      //   headers: {
+      //     Authorization: `Bearer ${access_token}`,
+      //     'Content-Type': 'application/json',
+      //   },
+      
+      // });
+      
+      // //Trae las tareas desde la BD
+      // axiosInstance
+      //   .get("/tasks/")
+      //   .then((response) => setTasks(response.data))
+      //   .catch((error) => console.error(error));       
+
+    // } else {
+    //   //Si el token JWT no está presente en localStorage, redirige a la página de inicio de sesión
+    //   router.push('/iniciar_sesion'); 
+    // }
