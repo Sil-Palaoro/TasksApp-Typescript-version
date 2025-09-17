@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import styles from "@/styles/page.module.css";
 
  
-export default function Atras() {
+export default function VolverAtrasButton() {
   const router = useRouter()
  
   return (

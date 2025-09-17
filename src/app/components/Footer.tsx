@@ -1,8 +1,7 @@
 //Componente Footer con  boton "Volver atras", excepto en el Home
 "use client";
 import { useState, useEffect } from 'react';
-import Atras from "./Atras.js";
-import styles from "@/styles/page.module.css";
+import VolverAtrasButton from "./VolverAtrasButton";
 
 function Footer() {
   const [isClientFooter, setIsClientFooter] = useState(false)
@@ -16,7 +15,7 @@ function Footer() {
       {isClientFooter == true ?
         <div>
           <div>
-          <Atras className={styles.botonatras} />
+          <VolverAtrasButton />
           </div>
           <h3 style={{   
           fontFamily: 'Raleway',     
