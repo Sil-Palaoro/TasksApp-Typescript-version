@@ -14,6 +14,22 @@ function BarraNavAppTareas () {
   useEffect(() => {
     setIsClient(true)
   }, [])
+
+  function PathNameNotHome() {
+    return pathname !== '/'
+  }
+
+  function PathNameNotIniciarSesion() {
+    return pathname !== '/iniciar_sesion'
+  }
+
+  function PathNameNotTareas() {
+    return pathname !== '/tareas'
+  }
+
+  function PathNameNotRegistro() {
+    return pathname !== '/registro'
+  }
  
   return (
     <>
@@ -28,16 +44,16 @@ function BarraNavAppTareas () {
         className="navigation-menu">
         <ul>
           <li>
-          {pathname !== '/' ? (<Link href="/">Home</Link>) : null}
+          {PathNameNotHome() ? (<Link href="/">Home</Link>) : null}
           </li>          
           <li>
-          {pathname !== '/iniciar_sesion' && pathname !== '/tareas'  ? (<Link href="/iniciar_sesion">Iniciar sesión</Link>) : null}
+          {PathNameNotIniciarSesion() && PathNameNotTareas()  ? (<Link href="/iniciar_sesion">Iniciar sesión</Link>) : null}
           </li>
           <li>
-          {pathname !== '/registro' && pathname !== '/tareas' ? (<Link href="/registro">Registrarse</Link>) : null}
+          {PathNameNotRegistro() && PathNameNotTareas() ? (<Link href="/registro">Registrarse</Link>) : null}
           </li>
           <li>
-          {pathname !== '/' && pathname !== '/registro' && pathname !== '/iniciar_sesion' ? (<Link href="/cerrar-sesion">Cerrar sesión</Link>) : null}
+          {PathNameNotHome() && PathNameNotRegistro() && PathNameNotIniciarSesion() ? (<Link href="/cerrar-sesion">Cerrar sesión</Link>) : null}
           </li>
          </ul>
       </div>
@@ -48,3 +64,4 @@ function BarraNavAppTareas () {
 }
 
 export default BarraNavAppTareas;
+
