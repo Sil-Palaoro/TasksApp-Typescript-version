@@ -4,13 +4,12 @@ import { useRouter } from 'next/navigation';
 
 const LogOut = () => {
     const router = useRouter();
+    const removeJWTToken = () => localStorage.removeItem('access_token'); 
+    const redirectToLogin = () => router.push('../iniciar_sesion'); 
 
   useEffect(() => {    
-    // Elimina el token JWT del almacenamiento local
-    localStorage.removeItem('access_token'); 
-
-    // Redirige al usuario a la página de inicio
-    router.push('../iniciar_sesion'); 
+    removeJWTToken();
+    redirectToLogin();
   }, []);
 
   return <h1>Cerrando sesión..</h1>;
