@@ -6,69 +6,85 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 
-function TaskForm({ addTask, username }) {
+function TaskForm({ addTask, username: string }) {
   const [tasks, setTasks] = useState({title: '', description: ''});  
   const router = useRouter();
-  
-  useEffect(() => {
-    // Recupera el token JWT almacenado en localStorage
-    const access_token = localStorage.getItem('access_token');
-    
-    // Verifica si el token está presente
-    if (access_token) {
-      // Configura una instancia de Axios con el token en la cabecera
-      const axiosInstance = axios.create({
-        baseURL: "/api/",
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
-      
-      //Trae las tareas anteriores desde la BD
-      axiosInstance
-        .get("tasks/")
-        .then((response) => {
-          setTasks({...tasks, ...response.data});
-      })
-        .catch((error) => console.error(error));
-    } else {
-      // Si el token JWT no está presente en localStorage, redirige a la página de inicio de sesión
-      router.push('/iniciar_sesion'); 
-     }
-  }, []);
-  
 
-  const handleChange = (e) => {
-    setTasks({ ...tasks, [e.target.name]: e.target.value });
+  const getAccessToken = (): string | null => localStorage.getItem('access_token');
+  
+  function createAxiosInstance(token: string) {    
+    const axiosInstance = axios.create({
+          baseURL: "/api/",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          });
+
+      return axiosInstance;
   };
 
-  //Maneja la adición de nuevas tareas
-  const handleSubmit = (e) => {    
-    e.preventDefault();
-    const access_token = localStorage.getItem('access_token');
-    if (access_token) {
-      const axiosInstance = axios.create({
-        baseURL: "/api/",
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
+  const getPreviousTasks = async (axiosInstance: axios.AxiosInstance) => {
+    try {    
+      axiosInstance
+        .get("/tasks/")
+        .then((response) => {
+          setTasks({...tasks, ...response.data})
+        });
+    } catch {((error: Error) => console.error(error))};   
+  };
 
-      const  taskData = {...tasks,
-      user: username}; 
+  const postNewTask = async (axiosInstance: axios.AxiosInstance) => {
+    const  taskData = {
+      ...tasks,
+      user: username
+    }; 
 
-      //Agrega una nueva tarea en la BD con POST
+    try {
       axiosInstance
         .post('/tasks/', taskData)
-        .then((response) => {          
-          
+        .then((response) => {               
           // Llama a la función addTask para agregar la tarea      
           addTask(response.data);
           setTasks({title: '', description: ''});          
-        })
-        .catch((error) => console.error(error));
+        });
+      } catch {((error: Error) => console.error(error))};
+  };
+
+
+  const redirectToLogin = () => router.push('/iniciar_sesion'); 
+
+  
+  useEffect(() => {
+    const accessToken = getAccessToken(); 
+    
+    if (accessToken) {
+      const axiosInstance = createAxiosInstance(accessToken);
+      getPreviousTasks(axiosInstance);          
     } else {
-      router.push('/iniciar_sesion');
+        redirectToLogin();
+    }
+
+  }, []);
+  
+
+  const handleChange = (event) => {
+    setTasks({ 
+      ...tasks, 
+      [event.target.name]: event.target.value 
+    });
+  };
+
+  
+  const handleSubmit = (event) => {    
+    event.preventDefault();
+    const accessToken = getAccessToken(); 
+
+    if (accessToken) {
+      const axiosInstance = createAxiosInstance(accessToken);   
+      postNewTask(axiosInstance);   
+    } else {
+      redirectToLogin();
     }
   };
   
@@ -99,4 +115,20 @@ function TaskForm({ addTask, username }) {
 export default TaskForm;
 
 
+
+//postNewTask previo
+
+      // const  taskData = {...tasks,
+      // user: username}; 
+
+      // //Agrega una nueva tarea en la BD con POST
+      // axiosInstance
+      //   .post('/tasks/', taskData)
+      //   .then((response) => {          
+          
+      //     // Llama a la función addTask para agregar la tarea      
+      //     addTask(response.data);
+      //     setTasks({title: '', description: ''});          
+      //   })
+      //   .catch((error) => console.error(error));
 
