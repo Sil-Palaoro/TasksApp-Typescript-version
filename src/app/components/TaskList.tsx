@@ -3,17 +3,24 @@ import TaskForm from "./TaskForm";
 import TaskItem from "./TaskItem";
 import EditTaskForm from "./EditTaskForm";
 import styles from "@/styles/TaskList.module.css";
-import { AiFillEdit } from "react-icons/ai";
-import { BsFillTrash2Fill } from "react-icons/bs";
-import { RiRadioButtonFill } from "react-icons/ri";
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import { useRouter } from 'next/navigation';
 
 
+ interface Task {
+    id: string;
+    title: string;
+    description: string;
+    completed: boolean;
+    creation_date: string;
+    isEditing: boolean;
+  }
+
+
 //Lista de tareas
 function TaskList() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [filter, setFilter] = useState("all"); // Estado para el filtro seleccionado
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
   const router = useRouter();
@@ -37,7 +44,7 @@ function TaskList() {
   const getTasks = async (axiosInstance: axios.AxiosInstance) => {
     try {    
       axiosInstance
-        .get("/tasks/")
+        .get<Task[]>("/tasks/")
         .then((response) => setTasks(response.data))
         // .catch((error) => console.error(error));     
     } catch {((error: Error) => console.error(error))};   
@@ -58,8 +65,9 @@ function TaskList() {
     }
   }, []);  
   
+
   //Función para agregar una nueva tarea
-  const addTask = (task) => {    
+  const addTask = (task: Task) => {    
     setTasks([
       ...tasks,
       {        
@@ -86,7 +94,7 @@ function TaskList() {
 
         axiosInstance
             .post(`/tasks/${id}/task_completed/`)
-            .then((response) => {
+            .then(() => {
               // Actualizar la lista de tareas en el frontend después de recibir la respuesta del servidor
               const updatedTasks = tasks.map((task) =>
                 task.id === id ? { ...task, completed: !task.completed } : task
@@ -101,13 +109,13 @@ function TaskList() {
 
 
   //Función para eliminar una tarea
-  const delTask = (id) => {
+  const delTask = (id: string) => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
 
   //Función para editar una tarea
-  const editTask = (id) => {
+  const editTask = (id: string) => {
     setTasks(
       tasks.map((task) =>
         task.id === id ? { ...task, isEditing: !task.isEditing } : task
@@ -116,7 +124,7 @@ function TaskList() {
   };
   
 
-  const editText = (title, description, id) => {
+  const editText = ({title, description, id}: Task) => {
     setTasks(
       tasks.map((task) =>
         task.id === id
@@ -154,8 +162,6 @@ function TaskList() {
       {/*Lista de tareas*/}
       <div className={styles.descripcionbox}>      
       
-      {console.log("Respuesta del servidor:", tasks)}
-
       {/*Muestra las tareas primero aplicando el filtro de búsqueda*/}
       {tasks.filter((task) => {
     if (filter === "filtrocompleted") {
@@ -221,3 +227,7 @@ export default TaskList;
     //   //Si el token JWT no está presente en localStorage, redirige a la página de inicio de sesión
     //   router.push('/iniciar_sesion'); 
     // }
+
+    // import { AiFillEdit } from "react-icons/ai";
+// import { BsFillTrash2Fill } from "react-icons/bs";
+// import { RiRadioButtonFill } from "react-icons/ri";
