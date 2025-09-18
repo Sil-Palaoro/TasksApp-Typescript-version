@@ -4,9 +4,16 @@ import {useState, useEffect} from 'react';
 import styles from '@/styles/TaskForm.module.css';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { Task } from './TaskForm';
 
 
-function EditTaskForm({editTask, text}) {
+interface EditTaskFormProps {
+  editTask: (title: string, description: string, id: string) => void; 
+  text: Task;
+}
+
+
+function EditTaskForm({editTask, text}: EditTaskFormProps) {
   const [title, setTitle] = useState(text.title);
   const [description, setDescription] = useState(text.description);
   const [tasks, setTasks] = useState([]);   //retirar?
@@ -40,8 +47,8 @@ function EditTaskForm({editTask, text}) {
     }, []);  
 
     //Maneja la edición de la tarea
-    const handleSubmit = (e) => {
-      e.preventDefault();
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
 
       //Accede al token JWT
       const access_token = localStorage.getItem('access_token');
@@ -63,7 +70,7 @@ function EditTaskForm({editTask, text}) {
             console.log(response.data);
 
             // Llama a la función editTask para editar la tarea
-            editTask( title, description, text.id);
+            editTask(title, description, text.id);
           })
           .catch((error) => console.error(error));
       } else {
