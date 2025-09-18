@@ -13,10 +13,10 @@ interface TaskItemsProps {
   text: Task;
   taskCompleted: (id: string) => void;
   delTask: (id: string) => void;
-  editTask: (id: string) => void;
+  isEditingTask: (id: string) => void;
 }
 
-function TaskItem({ text, taskCompleted, delTask, editTask }: TaskItemsProps) {  
+function TaskItem({ text, taskCompleted, delTask, isEditingTask }: TaskItemsProps) {  
   const [tasks, setTasks] = useState([]);
   const router = useRouter();
   
@@ -96,7 +96,7 @@ function TaskItem({ text, taskCompleted, delTask, editTask }: TaskItemsProps) {
 
         <AiFillEdit
           className={styles.AiFillEdit}
-          onClick={() => editTask(text.id)}
+          onClick={() => isEditingTask(text.id)}
         />
         <BsFillTrash2Fill
           className={styles.BsFillTrash2Fill}

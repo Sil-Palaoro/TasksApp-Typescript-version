@@ -90,7 +90,7 @@ function TaskList() {
 
 
   //Función para editar una tarea
-  const editTask = (id: string) => {
+  const markTaskAsEditing = (id: string) => {
     setTasks(
       tasks.map((task) =>
         task.id === id ? { ...task, isEditing: !task.isEditing } : task
@@ -99,7 +99,7 @@ function TaskList() {
   };
   
 
-  const editText = ({title, description, id}: Task) => {
+  const editText = (title: string, description: string, id: string) => {
     setTasks(
       tasks.map((task) =>
         task.id === id
@@ -184,7 +184,7 @@ function TaskList() {
                   key={index}
                   taskCompleted={taskCompleted}
                   delTask={deleteTask}
-                  editTask={editTask}
+                  isEditingTask={markTaskAsEditing}
                 />
               )
             )}
