@@ -1,13 +1,29 @@
 //Componente del formulario para armar cada tarea
 "use client";
 import {useEffect, useState}  from "react";
-import styles from '@/styles/TaskForm.module.css';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import styles from "@/styles/TaskForm.module.css";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 
-function TaskForm({ addTask, username: string }) {
-  const [tasks, setTasks] = useState({title: '', description: ''});  
+interface Task {
+    id?: string;
+    title: string;
+    description: string;
+    completed?: boolean;
+    creation_date?: string;
+    isEditing?: boolean;
+    username?: string;
+  }
+
+interface TaskFormProps {
+  addTask: (task: Task) => void;
+  username: string;
+}
+
+
+function TaskForm({ addTask, username }: TaskFormProps) {
+  const [tasks, setTasks] = useState<Pick<Task, "title" | "description">>({title:"", description: ""});
   const router = useRouter();
 
   const getAccessToken = (): string | null => localStorage.getItem('access_token');
@@ -68,15 +84,15 @@ function TaskForm({ addTask, username: string }) {
   }, []);
   
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTasks({ 
       ...tasks, 
       [event.target.name]: event.target.value 
     });
   };
 
-  
-  const handleSubmit = (event) => {    
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {    
     event.preventDefault();
     const accessToken = getAccessToken(); 
 
