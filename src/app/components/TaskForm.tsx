@@ -7,27 +7,26 @@ import axios from "axios";
 
 
 interface Task {
-    id?: string;
+    id: string;
     title: string;
     description: string;
-    completed?: boolean;
-    creation_date?: string;
-    isEditing?: boolean;
-    username?: string;
+    completed: boolean;
+    creation_date: string;
+    isEditing: boolean;
   }
 
 interface TaskFormProps {
   addTask: (task: Task) => void;
-  username: string;
 }
 
 
-function TaskForm({ addTask, username }: TaskFormProps) {
+const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
   const [tasks, setTasks] = useState<Pick<Task, "title" | "description">>({title:"", description: ""});
   const router = useRouter();
 
   const getAccessToken = (): string | null => localStorage.getItem('access_token');
   
+
   function createAxiosInstance(token: string) {    
     const axiosInstance = axios.create({
           baseURL: "/api/",
@@ -40,6 +39,7 @@ function TaskForm({ addTask, username }: TaskFormProps) {
       return axiosInstance;
   };
 
+
   const getPreviousTasks = async (axiosInstance: axios.AxiosInstance) => {
     try {    
       axiosInstance
@@ -50,11 +50,9 @@ function TaskForm({ addTask, username }: TaskFormProps) {
     } catch {((error: Error) => console.error(error))};   
   };
 
+
   const postNewTask = async (axiosInstance: axios.AxiosInstance) => {
-    const  taskData = {
-      ...tasks,
-      user: username
-    }; 
+    const  taskData = tasks; 
 
     try {
       axiosInstance
@@ -71,19 +69,6 @@ function TaskForm({ addTask, username }: TaskFormProps) {
   const redirectToLogin = () => router.push('/iniciar_sesion'); 
 
   
-  useEffect(() => {
-    const accessToken = getAccessToken(); 
-    
-    if (accessToken) {
-      const axiosInstance = createAxiosInstance(accessToken);
-      getPreviousTasks(axiosInstance);          
-    } else {
-        redirectToLogin();
-    }
-
-  }, []);
-  
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTasks({ 
       ...tasks, 
@@ -103,6 +88,20 @@ function TaskForm({ addTask, username }: TaskFormProps) {
       redirectToLogin();
     }
   };
+
+
+  useEffect(() => {
+    const accessToken = getAccessToken(); 
+    
+    if (accessToken) {
+      const axiosInstance = createAxiosInstance(accessToken);
+      getPreviousTasks(axiosInstance);          
+    } else {
+        redirectToLogin();
+    }
+
+  }, []);
+  
   
   //Formulario para agregar una nueva tarea
   return <form className = {styles.taskForm} onSubmit={handleSubmit}>
@@ -129,22 +128,4 @@ function TaskForm({ addTask, username }: TaskFormProps) {
 }
 
 export default TaskForm;
-
-
-
-//postNewTask previo
-
-      // const  taskData = {...tasks,
-      // user: username}; 
-
-      // //Agrega una nueva tarea en la BD con POST
-      // axiosInstance
-      //   .post('/tasks/', taskData)
-      //   .then((response) => {          
-          
-      //     // Llama a la función addTask para agregar la tarea      
-      //     addTask(response.data);
-      //     setTasks({title: '', description: ''});          
-      //   })
-      //   .catch((error) => console.error(error));
 
