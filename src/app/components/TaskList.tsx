@@ -3,19 +3,11 @@ import TaskForm from "./TaskForm";
 import TaskItem from "./TaskItem";
 import EditTaskForm from "./EditTaskForm";
 import styles from "@/styles/TaskList.module.css";
-import axios from 'axios';
-import {useEffect, useState} from 'react';
-import { useRouter } from 'next/navigation';
+import axios from "axios";
+import {useEffect, useState} from "react";
+import { useRouter } from "next/navigation";
+import { Task } from "./TaskForm";
 
-
- interface Task {
-    id: string;
-    title: string;
-    description: string;
-    completed: boolean;
-    creation_date: string;
-    isEditing: boolean;
-  }
 
 
 //Lista de tareas
@@ -51,20 +43,7 @@ function TaskList() {
   };
 
   const redirectToLogin = () => router.push('/iniciar_sesion'); 
-
-  
-  useEffect(() => {
-    const accessToken = getAccessToken();
-
-
-    if (accessToken) {
-      const axiosInstance = createAxiosInstance(accessToken);
-      getTasks(axiosInstance);
-    } else {
-      redirectToLogin();
-    }
-  }, []);  
-  
+    
 
   //Función para agregar una nueva tarea
   const addTask = (task: Task) => {    
@@ -83,14 +62,10 @@ function TaskList() {
 
   //Función para marcar una tarea como completada o no
   const taskCompleted = (id: string) => {
-    const access_token = localStorage.getItem('access_token');
-    if (access_token) {
-        const axiosInstance = axios.create({
-            baseURL: "/api/",
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        });
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      try {      
+        const axiosInstance = createAxiosInstance(accessToken);
 
         axiosInstance
             .post(`/tasks/${id}/task_completed/`)
@@ -100,16 +75,16 @@ function TaskList() {
                 task.id === id ? { ...task, completed: !task.completed } : task
               );
               setTasks(updatedTasks);
-        })
-            .catch((error) => console.error(error));
+        })            
+      } catch {((error: Error) => console.error(error))};
     } else {
-        router.push('/iniciar_sesion');
+        redirectToLogin();
     }
 };
 
 
   //Función para eliminar una tarea
-  const delTask = (id: string) => {
+  const deleteTask = (id: string) => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
@@ -139,6 +114,19 @@ function TaskList() {
     );
   };
 
+
+  useEffect(() => {
+    const accessToken = getAccessToken();
+
+
+    if (accessToken) {
+      const axiosInstance = createAxiosInstance(accessToken);
+      getTasks(axiosInstance);
+    } else {
+      redirectToLogin();
+    }
+  }, []);  
+
   return (
     <div className={styles.container}>      
       {/*Formulario para agregar una nueva tarea*/}
@@ -146,11 +134,22 @@ function TaskList() {
 
       <div >
         {/*Barra de busqueda*/}
-        <input className={styles.taskInput} name="search" type="text" placeholder="Buscar tareas..." 
-        value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        <input 
+          className={styles.taskInput} 
+          name="search" 
+          type="text" 
+          placeholder="Buscar tareas..." 
+          value={searchTerm} 
+          onChange={(e) => setSearchTerm(e.target.value)} 
+        />
         
         {/*Botón para seleccionar filtro de búsqueda*/}
-        <select className={styles.taskBtn} name="filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <select 
+          className={styles.taskBtn} 
+          name="filter" 
+          value={filter} 
+          onChange={(e) => setFilter(e.target.value)}
+        >
           <option value="all">Todas las tareas</option>
           <option value="filtrocompleted">Realizadas</option>
           <option value="filtroincomplete">Pendientes</option>
@@ -163,31 +162,32 @@ function TaskList() {
       <div className={styles.descripcionbox}>      
       
       {/*Muestra las tareas primero aplicando el filtro de búsqueda*/}
-      {tasks.filter((task) => {
-    if (filter === "filtrocompleted") {
-      return task.completed;
-    } else if (filter === "filtroincomplete") {
-      return !task.completed;
-    }
-    return true;
-  })
-  .filter((task) =>
-    task.title.toLowerCase().includes(searchTerm.toLowerCase())    
-    ).map((task, index) =>
-        //Muestra las tareas dependiendo si se está editando o no
-        task.isEditing ? (
-          <EditTaskForm editTask={editText} text={task} />
-        ) : (
-          
-          <TaskItem
-            text={task}
-            key={index}
-            taskCompleted={taskCompleted}
-            delTask={delTask}
-            editTask={editTask}
-          />
-        )
-      )}
+      {tasks
+        .filter((task) => {
+          if (filter === "filtrocompleted") {
+            return task.completed;
+          } else if (filter === "filtroincomplete") {
+            return !task.completed;
+          }
+          return true;
+        })
+        .filter((task) =>
+          task.title.toLowerCase().includes(searchTerm.toLowerCase())    
+          ).map((task, index) =>
+              //Muestra las tareas dependiendo si se está editando o no
+              task.isEditing ? (
+                <EditTaskForm editTask={editText} text={task} />
+              ) : (
+              
+                <TaskItem
+                  text={task}
+                  key={index}
+                  taskCompleted={taskCompleted}
+                  delTask={deleteTask}
+                  editTask={editTask}
+                />
+              )
+            )}
       
       </div>
     </div>

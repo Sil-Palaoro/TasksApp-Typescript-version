@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 
-interface Task {
+export interface Task {
     id: string;
     title: string;
     description: string;
