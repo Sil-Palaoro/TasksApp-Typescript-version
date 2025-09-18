@@ -7,9 +7,16 @@ import styles from "@/styles/Task.module.css";
 import { useRouter } from 'next/navigation';
 import {useState, useEffect}  from "react";
 import axios from 'axios';
+import { Task } from "./TaskForm"; 
 
+interface TaskItemsProps {
+  text: Task;
+  taskCompleted: (id: string) => void;
+  delTask: (id: string) => void;
+  editTask: (id: string) => void;
+}
 
-function TaskItem({ text, taskCompleted, delTask, editTask }) {  
+function TaskItem({ text, taskCompleted, delTask, editTask }: TaskItemsProps) {  
   const [tasks, setTasks] = useState([]);
   const router = useRouter();
   
@@ -40,7 +47,7 @@ function TaskItem({ text, taskCompleted, delTask, editTask }) {
   }, []);
 
   //Maneja la eliminación de la tarea
-  const handleDelete = (e) => {        
+  const handleDelete = (textId: string) => {        
     const access_token = localStorage.getItem('access_token');
     if (access_token) {
       const axiosInstance = axios.create({
@@ -52,11 +59,11 @@ function TaskItem({ text, taskCompleted, delTask, editTask }) {
 
       //Elimina la tarea en la BD 
       axiosInstance
-        .delete(`/tasks/${text.id}/`)
-        .then((response) => {
+        .delete(`/tasks/${textId}/`)
+        .then(() => {
           
           // Llama a la función delTask para eliminar la tarea
-          delTask(text.id);
+          delTask(textId);
         })
         .catch((error) => console.error(error));
     } else {
@@ -77,13 +84,13 @@ function TaskItem({ text, taskCompleted, delTask, editTask }) {
         <RiRadioButtonFill
           onClick={handleCompleted}
           className={
-            text.completed ? [styles.RiRadioButtonFillCompleted] : [styles.RiRadioButtonFill]
+            text.completed ? styles.RiRadioButtonFillCompleted : styles.RiRadioButtonFill
           }
         />
-        <h3 className={text.completed ? [styles.completed] : [styles.task]}>
+        <h3 className={text.completed ? styles.completed : styles.task}>
           {text.title}
         </h3>
-        <p className={text.completed ? [styles.completed] : [styles.task]}>
+        <p className={text.completed ? styles.completed : styles.task}>
           {text.description}
         </p>
 
