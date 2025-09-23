@@ -1,21 +1,22 @@
 /*Página de registro de usuario*/
 "use client";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 import styles from "@/styles/page.module.css";
 import axios from 'axios';
 
 function Registro() {
-  // Estados para almacenar los datos del formulario y mensajes de error 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
 
-  
-  const handleRegister = async () => {
-    try {
-          /*Validaciones de los inputs*/
-        if (username.length > 15 || !/^[a-zA-Z0-9]+$/.test(username)) {
+  const apiUrl: string = '/api/register/'; 
+  const redirectToLogin = () => router.push('../iniciar_sesion'); 
+
+  const inputsValidation = (username: string, password: string, password2: string ) => {
+    if (username.length > 15 || !/^[a-zA-Z0-9]+$/.test(username)) {
           setErrorMessage(
             "El nombre de usuario debe tener menos de 15 caracteres y contener solo letras y números."
           );
@@ -32,29 +33,35 @@ function Registro() {
         } else if (password !== password2) {
           setErrorMessage("Las contraseñas no coinciden.");
         } else {
-          
-          const response = await axios.post('/api/register/', {             
-            username,
-            password           ,
-          });
+          setErrorMessage("");
+          return true;
+        }
+  };
 
-          // Si la solicitud se realiza con éxito muestra un mensaje de éxito.
-          alert("El registro fue exitoso!");
+  
+  const handleRegister = async () => {
+    try {        
+        if (inputsValidation(username, password, password2)) {        
+          const postResponse = await axios.post(apiUrl, {username, password});
 
-          setErrorMessage("");          
-          setUsername("");
-          setPassword("");
-          setPassword2("");
-
-          // Redirige a la página de Inicio de sesión
-          window.location.href = "/iniciar_sesion"; }
-    } catch (error) {
-      if (error.response) {
-        setErrorMessage(error.response.data.detail || "Error en el registro.");
-      } else {
-        setErrorMessage("Error en la solicitud.");
-      }
-    }
+          if (postResponse.status === 200) {
+            alert("El registro fue exitoso!");
+            setErrorMessage("");          
+            setUsername("");
+            setPassword("");
+            setPassword2("");
+            redirectToLogin(); 
+          }    
+          }
+    } catch (error: unknown) {
+      if (axios.isAxiosError<{ message: string }>(error)) {
+              setErrorMessage(error.response?.data.message || "Error en el registro.");
+            } else if (error instanceof Error){
+              setErrorMessage(error.message);
+            } else {
+              setErrorMessage("Error inesperado.");
+            }
+    };
   };
 
   return (
@@ -72,7 +79,7 @@ function Registro() {
           <h5>Ingrese su nombre de usuario</h5>
           <input className={styles.input}  
             type="text"
-            maxLength="15"
+            maxLength={15}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
