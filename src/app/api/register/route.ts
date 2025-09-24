@@ -2,19 +2,19 @@ import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
 
-// let users = []; //almacenamiento de ususarios en memoria
+export async function POST(request: Request): Promise<Response> {
 
-export async function POST(request) {
-    // Obtener los datos de la solicitud 
-    const { username, password } = await request.json();
+    const { username, password } = await request.json() as{
+        username: string;
+        password: string;
+    };
 
-    if (!username | typeof username !== 'string') {
+    if (!username || typeof username !== 'string') {
         return new Response(JSON.stringify({ error: "Nombre de usuario requerido"}), {
             status: 400,
         });        
     }
 
-    // Verificar si el usuario ya existe en la base de datos 
     const existingUser = await prisma.user.findUnique({
         where: { username },
     });
@@ -25,14 +25,12 @@ export async function POST(request) {
         });
     }
 
-    // Hashear la contraseña antes de almacenarla
     const hashedPassword = await bcrypt.hash(password, 10);      
 
-    // Crear el nuevo usuario en la base de datos 
     const newUser = await prisma.user.create({
         data: { 
         username,
-        password: hashedPassword, // Solo para prueba. En entorno real, nunca almacenaría contraseñas en texto plano
+        password: hashedPassword, 
         },
      });
 
