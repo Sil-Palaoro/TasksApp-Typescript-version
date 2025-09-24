@@ -2,9 +2,12 @@ import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { createJWT } from '@/lib/jwt';
 
-export async function POST(request) {
+export async function POST(request: Request): Promise<Response> {
     // Obtener los datos de la solicitud 
-    const { username, password } = await request.json();
+    const { username, password } = await request.json() as {
+        username: string;
+        password: string;
+    };
 
     const user = await prisma.user.findUnique({
         where: { username },
