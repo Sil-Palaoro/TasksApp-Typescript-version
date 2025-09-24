@@ -13,7 +13,7 @@ function Inicio_sesion() {
   const router = useRouter();
   
   const apiUrl: string = '/api/login'; 
-  const redirectToTareas = () => router.push('../tareas/'); 
+  const redirectToTareas = () => router.push('../tareas'); 
 
 
   const handleIniciarSesion = async () => {
@@ -46,7 +46,7 @@ function Inicio_sesion() {
           <br />
           <p>A continuación ingrese su usuario y contraseña:</p>
           <br />
-          <form>
+          <div>
             <h5>Ingrese su nombre de usuario</h5>
             <input className={styles.input}
               value={username}
@@ -73,7 +73,7 @@ function Inicio_sesion() {
               Iniciar
             </button>{" "}
 
-          </form>
+          </div>
         </div>
       </div>
     </>

@@ -44,7 +44,7 @@ function Registro() {
         if (inputsValidation(username, password, password2)) {        
           const postResponse = await axios.post(apiUrl, {username, password});
 
-          if (postResponse.status === 200) {
+          if (postResponse.status === 201) {
             alert("El registro fue exitoso!");
             setErrorMessage("");          
             setUsername("");
