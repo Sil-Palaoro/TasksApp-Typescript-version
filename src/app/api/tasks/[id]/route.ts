@@ -2,8 +2,15 @@ import prisma from '@/lib/prisma';
 import { verifyJWT } from '@/lib/jwt';
 
 
-export async function PUT(request, { params }) {
-  const { id } = await params;
+interface Params {
+  params: {
+      id: string;
+  }
+}
+
+
+export async function PUT(request: Request, {params}: Params ): Promise<Response> {
+  const { id } = params;
   // Obtener el token de autorización del encabezado 
   const authHeader = request.headers.get('authorization');
   const token = authHeader?.split(' ')[1];
@@ -52,8 +59,8 @@ export async function PUT(request, { params }) {
   return Response.json(updatedTask);
 }
 
-export async function PATCH(request, { params }) { 
-  const { id } = await params;
+export async function PATCH(request: Request, {params}: Params): Promise<Response> { 
+  const { id } = params;
   // Obtener el token de autorización del encabezado 
   const authHeader = request.headers.get('authorization');
   const token = authHeader?.split(' ')[1];
@@ -103,8 +110,8 @@ export async function PATCH(request, { params }) {
   return Response.json(updatedTask);
 }
 
-export async function DELETE(request, { params}) {
-  const { id } = await params;
+export async function DELETE(request: Request, {params}: Params): Promise<Response> {
+  const { id } = params;
   const authHeader = request.headers.get('authorization');
   const token = authHeader?.split(' ')[1];
 
